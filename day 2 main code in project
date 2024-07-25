@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .container.active {
+            display: block;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container input[type="text"], .container input[type="password"], .container input[type="date"], .container input[type="radio"], .container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .container input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .container input[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="registerContainer">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" required>
+            <input type="submit" value="Register">
+        </form>
+    </div>
+
+    <div class="container" id="loginContainer">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="loginUsername" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="loginPassword" name="password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <div class="container" id="candidateContainer">
+        <h2>Register Candidate</h2>
+        <form id="candidateForm">
+            <label for="candidateName">Name</label>
+            <input type="text" id="candidateName" name="candidateName" required>
+            <label for="candidateDetails">Details</label>
+            <input type="text" id="candidateDetails" name="candidateDetails" required>
+            <input type="submit" value="Register Candidate">
+        </form>
+    </div>
+
+    <div class="container" id="voteContainer">
+        <h2>Cast Your Vote</h2>
+        <form id="voteForm">
+            <div id="candidatesList"></div>
+            <input type="submit" value="Submit Vote">
+        </form>
+    </div>
+
+    <script>
+        // Simplified user and candidate storage
+        var users = [];
+        var candidates = [
+            { name: "Abdul Ahammad", details: "Experienced politician with a focus on education reform." },
+            { name: "Raghu", details: "Community leader advocating for environmental sustainability." }
+        ];
+
+        // Show the registration container on page load
+        document.getElementById('registerContainer').classList.add('active');
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var dob = document.getElementById('dob').value;
+
+            users.push({ username: username, password: password, dob: dob });
+            alert('Registration successful');
+            document.getElementById('registerContainer').classList.remove('active');
+            document.getElementById('loginContainer').classList.add('active');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var username = document.getElementById('loginUsername').value;
+            var password = document.getElementById('loginPassword').value;
+
+            var user = users.find(user => user.username === username && user.password === password);
+            if (user) {
+                var dob = new Date(user.dob);
+                var today = new Date();
+                var age = today.getFullYear() - dob.getFullYear();
+                var month = today.getMonth() - dob.getMonth();
+                if (month < 0 || (month === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                if (age < 18) {
+                    alert('You must be at least 18 years old to vote.');
+                } else {
+                    document.getElementById('loginContainer').classList.remove('active');
+                    document.getElementById('voteContainer').classList.add('active');
+                    loadCandidates();
+                }
+            } else {
+                alert('Invalid username or password');
+            }
+        });
+
+        document.getElementById('candidateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var candidateName = document.getElementById('candidateName').value;
+            var candidateDetails = document.getElementById('candidateDetails').value;
+
+            candidates.push({ name: candidateName, details: candidateDetails });
+            alert('Candidate registration successful');
+        });
+
+        document.getElementById('voteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var selectedCandidate = document.querySelector('input[name="candidate"]:checked').value;
+            alert('Thank you for voting for ' + selectedCandidate + '!');
+        });
+
+        function loadCandidates() {
+            var candidatesList = document.getElementById('candidatesList');
+            candidatesList.innerHTML = ''; // Clear the list
+            candidates.forEach(function(candidate) {
+                var label = document.createElement('label');
+                label.innerHTML = '<input type="radio" name="candidate" value="' + candidate.name + '" required> ' + candidate.name;
+                candidatesList.appendChild(label);
+                candidatesList.appendChild(document.createElement('br'));
+            });
+        }
+    </script>
+</body>
+</html>
