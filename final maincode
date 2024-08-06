@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <style>
+        /* Basic styling for the body and elements */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background: #007BFF;
+            color: white;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            background: #333;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        nav ul li a:hover {
+            background: #575757;
+        }
+        main {
+            padding: 20px;
+        }
+        .form-section {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-form" class="form-section">
+        <h1>Login</h1>
+        <form id="login" onsubmit="return authenticate(event)">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <header>
+            <h1>Online Voting System</h1>
+            <p>Welcome, <span id="user-display"></span> | <a href="#" onclick="logout()">Logout</a></p>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="#home" onclick="showSection('home')">Home</a></li>
+                <li><a href="#candidates" onclick="showSection('candidates')">Candidates</a></li>
+                <li><a href="#vote" onclick="showSection('vote')">Vote</a></li>
+                <li><a href="#results" onclick="showSection('results')">Results</a></li>
+                <li><a href="#contact" onclick="showSection('contact')">Contact</a></li>
+            </ul>
+        </nav>
+        <main>
+            <!-- Home Section -->
+            <section id="home" class="section-content">
+                <h2>Welcome to Our Online Voting System</h2>
+                <p>Cast your vote easily and securely.</p>
+            </section>
+
+            <!-- Candidates Section -->
+            <section id="candidates" class="section-content">
+                <h2>Candidate Information</h2>
+                <p>Here you can find information about the candidates.</p>
+                <!-- Add candidate information here -->
+            </section>
+
+            <!-- Vote Section -->
+            <section id="vote" class="section-content">
+                <h2>Cast Your Vote</h2>
+                <form id="vote-form" class="form-section" action="process_vote.php" method="POST">
+                    <div class="form-group">
+                        <label for="candidate">Select Candidate:</label>
+                        <select id="candidate" name="candidate" required>
+                            <option value="candidate1">Candidate 1</option>
+                            <option value="candidate2">Candidate 2</option>
+                            <option value="candidate3">Candidate 3</option>
+                            <!-- Add more candidates as needed -->
+                        </select>
+                    </div>
+                    <input type="submit" value="Vote">
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results" class="section-content">
+                <h2>Voting Results</h2>
+                <p>Here you can see the results of the voting.</p>
+                <!-- Add results information here -->
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="section-content">
+                <h2>Contact Us</h2>
+                <form id="contact-form" class="form-section" action="contact_form.php" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <input type="submit" value="Submit">
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Online Voting System</p>
+    </footer>
+
+    <script>
+        // Function to authenticate the user
+        function authenticate(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'abdul' && password === 'abdul') { // Example credentials
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('user-display').textContent = username;
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        // Function to log out the user
+        function logout() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
+        }
+
+        // Function to show a specific section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Show the home section by default when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('home');
+        });
+    </script>
+</body>
+</html>
